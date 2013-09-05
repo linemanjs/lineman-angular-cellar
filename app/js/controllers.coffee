@@ -1,21 +1,21 @@
 root = this
 
-root.WineListCtrl = (WineFactory, $scope) ->
-  $scope.wines = WineFactory.query()
+root.WineListCtrl = (Wines, $scope) ->
+  $scope.wines = Wines.getList()
   $scope.$on "updateWines", (e, wines) ->
     $scope.wines = wines
 
-root.WineDetailCtrl = (WineFactory, $routeParams, $scope, $location, $rootScope) ->
-  $scope.wine = if $routeParams.id == "add" then nullWine() else WineFactory.get(id: $routeParams.id)
+root.WineDetailCtrl = (Wines, $routeParams, $scope, $location, $rootScope) ->
+  window.Wines = Wines
+  $scope.wine = if $routeParams.id == "add" then nullWine() else Wines.one($routeParams.id).get()
 
   $scope.saveWine = ->
-    WineFactory.save($scope.wine).$promise.then (wine) ->
-      $scope.wine = wine
-      $rootScope.$broadcast("updateWines", WineFactory.query())
+    Wines.putElement($scope.wine.id, $scope.wine).then ->
+      $rootScope.$broadcast("updateWines", Wines.getList())
 
   $scope.deleteWine = ->
-    WineFactory.delete(id: $scope.wine.id).$promise.then ->
-      $rootScope.$broadcast("updateWines", WineFactory.query())
+    Wines.one($scope.wine.id).remove().then ->
+      $rootScope.$broadcast("updateWines", Wines.getList())
       $location.path("/wines")
 
 nullWine = ->

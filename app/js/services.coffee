@@ -1,7 +1,7 @@
-angular.module("app", ['ngRoute', 'ngResource'])
+angular.module("app", ['ngRoute', 'restangular'])
 
-angular.module("app").factory "WineFactory", ($resource) ->
-  $resource "/api/wines/:id"
+angular.module("app").factory "Wines", (Restangular) ->
+  Restangular.all('wines')
 
 angular.module("app").config ($routeProvider, $locationProvider) ->
   $locationProvider.html5Mode(true)
