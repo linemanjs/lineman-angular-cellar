@@ -50,7 +50,7 @@ _ = require('grunt').util._
 
 module.exports = drawRoutes: (app) ->
   app.get "/api/wines", (req, res) ->
-    res.json wines
+    res.json(wines)
 
   app.get "/api/wines/:id", (req, res) ->
     wine = wineById(req.params.id)
