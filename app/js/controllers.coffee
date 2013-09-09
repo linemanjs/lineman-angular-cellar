@@ -1,21 +1,30 @@
 root = this
 
-root.WineListCtrl = (WineFactory, $scope) ->
-  $scope.wines = WineFactory.query()
-  $scope.$on "updateWines", (e, wines) ->
-    $scope.wines = wines
+root.WineListCtrl = (WineService, $scope) ->
+  WineService.all().then (wines) ->
+    $scope.wines = wines.data
 
-root.WineDetailCtrl = (WineFactory, $routeParams, $scope, $location, $rootScope) ->
-  $scope.wine = if $routeParams.id == "add" then nullWine() else WineFactory.get(id: $routeParams.id)
+  $scope.$on "winesUpdated", (e, wines) ->
+    $scope.wines = wines
+    undefined
+
+root.WineDetailCtrl = (WineService, $routeParams, $scope, $location, $rootScope) ->
+  if $routeParams.id == "add"
+    $scope.wine = nullWine()
+  else
+    WineService.get($routeParams.id).then (wine) ->
+      $scope.wine = wine.data
+
+  updateWines = ->
+    WineService.all().then (wines) ->
+      $rootScope.$broadcast "winesUpdated", wines.data
 
   $scope.saveWine = ->
-    WineFactory.save($scope.wine).$promise.then (wine) ->
-      $scope.wine = wine
-      $rootScope.$broadcast("updateWines", WineFactory.query())
+    WineService.save($scope.wine).then(updateWines).then ->
+      alert('Wine Saved!')
 
   $scope.deleteWine = ->
-    WineFactory.delete(id: $scope.wine.id).$promise.then ->
-      $rootScope.$broadcast("updateWines", WineFactory.query())
+    WineService.remove($scope.wine).then(updateWines).then ->
       $location.path("/wines")
 
 nullWine = ->
