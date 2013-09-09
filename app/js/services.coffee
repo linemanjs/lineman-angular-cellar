@@ -3,7 +3,9 @@ angular.module("app", ['ngRoute', 'restangular'])
 angular.module("app").factory "Wines", (Restangular) ->
   Restangular.all('wines')
 
-angular.module("app").config ($routeProvider, $locationProvider) ->
+angular.module("app").config ($routeProvider, $locationProvider, RestangularProvider) ->
+  RestangularProvider.setBaseUrl('/api')
+
   $locationProvider.html5Mode(true)
 
   $routeProvider.when "/wines",

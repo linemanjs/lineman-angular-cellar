@@ -2,21 +2,21 @@ root = this
 
 root.WineListCtrl = (Wines, $scope) ->
   $scope.wines = Wines.getList()
-  $scope.$on "updateWines", (e, wines) ->
-    $scope.wines = wines
 
-root.WineDetailCtrl = (Wines, $routeParams, $scope, $location, $rootScope) ->
-  window.Wines = Wines
+root.WineDetailCtrl = (Wines, $routeParams, $scope, $location, Restangular) ->
+  Wines.one($routeParams.id).get().then (wine) ->
+
   $scope.wine = if $routeParams.id == "add" then nullWine() else Wines.one($routeParams.id).get()
 
   $scope.saveWine = ->
-    Wines.putElement($scope.wine.id, $scope.wine).then ->
-      $rootScope.$broadcast("updateWines", Wines.getList())
+    $scope.wine.then (wine) ->
+      wine.customPUT().then ->
+        $location.path('/wines')
 
   $scope.deleteWine = ->
-    Wines.one($scope.wine.id).remove().then ->
-      $rootScope.$broadcast("updateWines", Wines.getList())
-      $location.path("/wines")
+    $scope.wine.then (wine) ->
+      wine.remove().then ->
+        $location.path('/wines')
 
 nullWine = ->
   picture: "generic.jpg"
