@@ -1,19 +1,29 @@
-protractor = require("protractor")
-require "protractor/jasminewd"
-require 'jasmine-given'
+require './helpers/spec_helper'
 
 describe "my angular app", ->
-  ptor = protractor.getInstance()
   describe "visiting the login page", ->
-    Given -> ptor.get "/"
+    ptor = protractor.getInstance()
+    Given ->
+      post 'covet/routes',
+        verb: 'get'
+        path: '/api/wines'
+        response:
+          json: [
+            id: 1,
+            name: 'AWESOME WINE',
+            year: '2009',
+            grapes: 'Grenache / Syrah',
+            country: 'France',
+            region: 'Southern Rhone / Gigondas',
+            description: 'The aromas of fruit and spice give one a hint of the light drinkability of this lovely wine, which makes an excellent complement to fish dishes.',
+            picture: 'saint_cosme.jpg'
+          ]
+      , (body, res) ->
+
+      ptor.get "/"
 
     describe "when a user logs in", ->
-      Then ->
-      # Given -> ptor.findElement(protractor.By.input("credentials.username")).sendKeys "Ralph"
-      # Given -> ptor.findElement(protractor.By.input("credentials.password")).sendKeys "Wiggum"
-      # When -> ptor.findElement(protractor.By.id("log-in")).click()
-      # Then -> ptor.findElement(protractor.By.binding("{{ message }}")).getText().then (text) ->
-      #     expect(text).toEqual "Mouse Over these images to see a directive at work"
+      Then -> ptor.findElement(protractor.By.linkText("AWESOME WINE")).click()
 
 
 

@@ -47,8 +47,10 @@ wines = [
 wineId = 6
 
 _ = require('grunt').util._
-
+covet = require('covet')
 module.exports = drawRoutes: (app) ->
+  covet.start(app: app)
+
   app.get "/api/wines", (req, res) ->
     res.json(wines)
 
