@@ -6,7 +6,7 @@ It is not very well documented.
 
 # Instructions
 
-1. `git clone https://github.com/testdouble/lineman-angular-cellar.git lineman-angular-cellar`
+1. `git clone https://github.com/linemanjs/lineman-angular-cellar.git lineman-angular-cellar`
 2. `cd lineman-angular-cellar`
 3. `npm install`
 4. `lineman run`
